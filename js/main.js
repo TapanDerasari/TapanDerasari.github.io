@@ -34,10 +34,8 @@
 		}
 	};
 
-	// Parallax
-	var parallax = function() {
-		$(window).stellar();
-	};
+	// Parallax (stellar removed — new hero uses CSS animations)
+	var parallax = function() {};
 
 	var contentWayPoint = function() {
 		var i = 0;
