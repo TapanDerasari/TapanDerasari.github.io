@@ -1,0 +1,57 @@
+# Tapan Derasari
+
+> PHP Team Lead with 7+ years of experience building scalable web applications. Based in Ahmedabad, India. Open to freelance and full-time opportunities.
+
+## About
+
+Tapan Derasari is a PHP Team Lead at TOPS Infosolutions Pvt. Ltd., one of India's leading IT firms. He specializes in Laravel-based web application development with a strong focus on team leadership, architecture decisions, and client communication. He has attended Laracon India and is active in the Laravel ecosystem.
+
+## Skills
+
+- Backend: PHP (Expert), Laravel (Expert), MySQL (Advanced), REST APIs (Advanced), Node.js (Intermediate), PostgreSQL (Intermediate)
+- Frontend: HTML5 (Expert), CSS3 (Expert), jQuery (Advanced), Vue.js (Intermediate), Nuxt.js (Intermediate), Tailwind CSS (Intermediate)
+- Cloud & DevOps: AWS Lambda (Intermediate), AWS Amplify (Intermediate), Docker (Intermediate), CI/CD (Beginner)
+- Tools: Git (Expert), Composer (Advanced), Postman (Advanced), Redis (Intermediate), NPM (Intermediate)
+
+## Work Experience
+
+### PHP Team Lead — TOPS Infosolutions Pvt. Ltd. (Oct 2025 – Present)
+- Leading and managing cross-functional teams across Node.js, React.js, AWS services, GIS, and Laravel
+- Driving project architecture decisions and conducting code reviews
+- Managing client communication, task allocation, and resource planning
+- Mentoring developers and fostering team growth
+
+### Sr Software Engineer — TOPS Infosolutions Pvt. Ltd. (Jan 2023 – Jan 2026)
+- Led backend architecture for 5+ enterprise Laravel applications
+- Implemented AWS Lambda microservices, reducing server costs
+- Developed multi-tenant SaaS platforms using Laravel + Vue.js/Nuxt.js
+- Built RESTful APIs consumed by mobile and web clients
+
+### Laravel Developer — TOPS Infosolutions Pvt. Ltd. (Mar 2019 – Feb 2023)
+- Developed multi-tenant SaaS platforms using Laravel + Vue.js
+- Integrated payment gateways (Stripe, Razorpay)
+- Built automated testing pipelines and CI/CD workflows
+
+### Laravel Developer — Inbound WebHub (Aug 2018 – Feb 2019)
+- Developed custom CMS and e-commerce solutions
+- Worked with jQuery and Bootstrap frontend stacks
+
+## Education
+
+Bachelor's Degree (Gold Medalist) — College of Agricultural Information Technology, Anand Agricultural University (2014–2018)
+
+## Notable Projects
+
+- **Multi-Tenant SaaS Platform**: White-label SaaS serving 50+ clients with tenant isolation, custom domains, and RBAC. Built with Laravel, MySQL, Vue.js.
+- **REST API Gateway**: Centralized API gateway for mobile apps with JWT auth, rate limiting, and Swagger docs. Built with Laravel Sanctum, Redis, AWS.
+- **Serverless Event Processor**: Event-driven system processing 100k+ daily webhook events via AWS Lambda, Node.js, SQS.
+
+## Contact
+
+- Email: tapanderasari89@gmail.com
+- Phone: +91 8128884440
+- Location: Ahmedabad, Gujarat, India
+- Portfolio: https://tapanderasari.github.io
+- GitHub: https://github.com/TapanDerasari
+- LinkedIn: https://in.linkedin.com/in/tapan-derasari-68a203115
+- Twitter/X: https://x.com/TDerasari
