@@ -1,0 +1,26 @@
+#!/bin/sh
+# Rebuild the compiled Tailwind CSS whenever its inputs are part of a commit,
+# so css/tailwind.css on GitHub Pages never falls out of date.
+
+watched_staged=$(git diff --cached --name-only --diff-filter=ACMR -- \
+  index.html src/tailwind.css package.json package-lock.json)
+
+[ -z "$watched_staged" ] && exit 0
+
+if [ ! -x node_modules/.bin/tailwindcss ]; then
+  echo "pre-commit: Tailwind CLI not installed. Run 'npm install' first; commit blocked." >&2
+  exit 1
+fi
+
+for f in index.html src/tailwind.css; do
+  if ! git diff --quiet -- "$f"; then
+    echo "pre-commit: warning: $f has unstaged changes; the CSS build includes them." >&2
+  fi
+done
+
+if ! npm run --silent build >&2; then
+  echo "pre-commit: Tailwind build failed; commit blocked." >&2
+  exit 1
+fi
+
+git add css/tailwind.css
