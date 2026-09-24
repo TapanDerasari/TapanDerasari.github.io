@@ -48,3 +48,43 @@ test('style.css has dark values as the only theme', () => {
   assert.ok(css.includes('linear-gradient(135deg, #18191E 0%, #22242C 100%)'));
   assert.ok(!/^\*\s*\{\s*transition/m.test(css), 'global * transition still present');
 });
+
+test('no jQuery or plugins are loaded; main.js is deferred', () => {
+  const html = read('index.html');
+  const srcs = [...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)].map(m => m[1]);
+  assert.deepEqual(srcs, ['js/main.js'], `unexpected scripts: ${srcs.join(', ')}`);
+  assert.match(html, /<script src="js\/main\.js" defer><\/script>/);
+  const inline = [...html.matchAll(/<script(?![^>]*(?:\bsrc=|type="application\/ld\+json"))[^>]*>/g)];
+  assert.equal(inline.length, 0, 'inline scripts remain');
+});
+
+test('main.js is plain JavaScript', () => {
+  const js = read('js/main.js');
+  assert.ok(!/\$\(|jQuery/.test(js), 'jQuery usage remains');
+  assert.ok(js.includes('IntersectionObserver'));
+});
+
+test('dead template animation hooks are gone', () => {
+  assert.ok(!read('index.html').includes('animate-box'));
+  assert.ok(!read('css/style.css').includes('animate-box'));
+});
+
+test('skill bar widths live in CSS so they show without JavaScript', () => {
+  const css = read('css/style.css');
+  for (const [level, width] of [['expert', '95%'], ['advanced', '75%'], ['intermediate', '55%'], ['beginner', '30%']]) {
+    assert.match(css, new RegExp(`\\.skill-bar-fill\\[data-level="${level}"\\]\\s*\\{\\s*width:\\s*${width}`));
+  }
+  assert.ok(!/class="skill-bar-fill"[^>]*style=/.test(read('index.html')), 'inline width on a bar');
+});
+
+test('unused vendor scripts are deleted', () => {
+  for (const f of ['jquery.min.js', 'jquery.easing.1.3.js', 'jquery.waypoints.min.js',
+    'jquery.easypiechart.min.js', 'jquery.stellar.min.js', 'modernizr-2.6.2.min.js',
+    'respond.min.js', 'bootstrap.min.js', 'google_map.js']) {
+    assert.ok(!exists(`js/${f}`), `js/${f} still exists`);
+  }
+});
+
+test('go-to-top is a real link with an accessible name', () => {
+  assert.match(read('index.html'), /<a href="#page" class="js-gotop" aria-label="Back to top">/);
+});

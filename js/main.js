@@ -1,147 +1,34 @@
-;(function () {
-	
-	'use strict';
+// Page behaviours: go-to-top button, nav shadow, skill-bar fill.
+// Loaded with `defer`; everything degrades to static content without it.
+(function () {
+  'use strict';
 
-	var isMobile = {
-		Android: function() {
-			return navigator.userAgent.match(/Android/i);
-		},
-			BlackBerry: function() {
-			return navigator.userAgent.match(/BlackBerry/i);
-		},
-			iOS: function() {
-			return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-		},
-			Opera: function() {
-			return navigator.userAgent.match(/Opera Mini/i);
-		},
-			Windows: function() {
-			return navigator.userAgent.match(/IEMobile/i);
-		},
-			any: function() {
-			return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-		}
-	};
+  if (!('IntersectionObserver' in window)) return;
 
-	
-	var fullHeight = function() {
+  // Show go-to-top and the nav shadow once the hero is out of view.
+  var header = document.querySelector('header.hero-section');
+  var nav = document.getElementById('main-nav');
+  var toTop = document.querySelector('.js-top');
+  if (header) {
+    new IntersectionObserver(function (entries) {
+      var pastHero = !entries[0].isIntersecting;
+      if (toTop) toTop.classList.toggle('active', pastHero);
+      if (nav) nav.classList.toggle('scrolled', pastHero);
+    }).observe(header);
+  }
 
-		if ( !isMobile.any() ) {
-			$('.js-fullheight').css('height', $(window).height());
-			$(window).resize(function(){
-				$('.js-fullheight').css('height', $(window).height());
-			});
-		}
-	};
-
-	// Parallax (stellar removed — new hero uses CSS animations)
-	var parallax = function() {};
-
-	var contentWayPoint = function() {
-		var i = 0;
-		$('.animate-box').waypoint( function( direction ) {
-
-			if( direction === 'down' && !$(this.element).hasClass('animated-fast') ) {
-				
-				i++;
-
-				$(this.element).addClass('item-animate');
-				setTimeout(function(){
-
-					$('body .animate-box.item-animate').each(function(k){
-						var el = $(this);
-						setTimeout( function () {
-							var effect = el.data('animate-effect');
-							if ( effect === 'fadeIn') {
-								el.addClass('fadeIn animated-fast');
-							} else if ( effect === 'fadeInLeft') {
-								el.addClass('fadeInLeft animated-fast');
-							} else if ( effect === 'fadeInRight') {
-								el.addClass('fadeInRight animated-fast');
-							} else {
-								el.addClass('fadeInUp animated-fast');
-							}
-
-							el.removeClass('item-animate');
-						},  k * 100, 'easeInOutExpo' );
-					});
-					
-				}, 50);
-				
-			}
-
-		} , { offset: '85%' } );
-	};
-
-
-
-	var goToTop = function() {
-
-		$('.js-gotop').on('click', function(event){
-			
-			event.preventDefault();
-
-			$('html, body').animate({
-				scrollTop: $('html').offset().top
-			}, 500, 'easeInOutExpo');
-			
-			return false;
-		});
-
-		$(window).scroll(function(){
-
-			var $win = $(window);
-			if ($win.scrollTop() > 200) {
-				$('.js-top').addClass('active');
-			} else {
-				$('.js-top').removeClass('active');
-			}
-
-		});
-	
-	};
-
-	var pieChart = function() {
-		$('.chart').easyPieChart({
-			scaleColor: false,
-			lineWidth: 4,
-			lineCap: 'butt',
-			barColor: '#FF9000',
-			trackColor:	"#f5f5f5",
-			size: 160,
-			animate: 1000
-		});
-	};
-
-	var skillsWayPoint = function() {
-		if ($('#fh5co-skills').length > 0 ) {
-			$('#fh5co-skills').waypoint( function( direction ) {
-										
-				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-					setTimeout( pieChart , 400);					
-					$(this.element).addClass('animated');
-				}
-			} , { offset: '90%' } );
-		}
-
-	};
-
-
-	// Loading page
-	var loaderPage = function() {
-		$(".fh5co-loader").fadeOut("slow");
-	};
-
-	
-	$(function(){
-		contentWayPoint();
-		goToTop();
-		loaderPage();
-		fullHeight();
-		parallax();
-		// pieChart();
-		skillsWayPoint();
-	});
-
-
-}());
+  // Grow skill bars from 0 to their CSS width the first time Skills is seen.
+  var skills = document.getElementById('fh5co-skills');
+  if (skills) {
+    var bars = skills.querySelectorAll('.skill-bar-fill');
+    bars.forEach(function (bar) { bar.style.width = '0%'; });
+    var skillsObserver = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      skillsObserver.disconnect();
+      bars.forEach(function (bar, i) {
+        setTimeout(function () { bar.style.width = ''; }, 80 * i);
+      });
+    }, { threshold: 0.15 });
+    skillsObserver.observe(skills);
+  }
+})();

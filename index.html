@@ -74,6 +74,7 @@
 }
 </script>
 
+    <script src="js/main.js" defer></script>
 </head>
 <body class="min-h-screen">
   <div id="page">
@@ -147,7 +148,7 @@
 
     <main>
 
-    <section id="fh5co-about" class="animate-box" aria-label="About Tapan Derasari">
+    <section id="fh5co-about" aria-label="About Tapan Derasari">
         <div class="max-w-5xl mx-auto px-6 py-16">
             <div class="text-center mb-12">
                 <span class="section-label">Who I Am</span>
@@ -184,17 +185,17 @@
 
     <section id="fh5co-resume" class="fh5co-bg-color" aria-label="Work Experience and Education">
         <div class="container">
-            <div class="animate-box text-center" style="margin-bottom: 3rem;">
+            <div class="text-center" style="margin-bottom: 3rem;">
                 <span class="section-label">Experience &amp; Education</span>
                 <h2 class="section-title">My Resume</h2>
             </div>
             <div class="row">
                 <div class="col-md-12 col-md-offset-0">
                     <ul class="timeline">
-                        <li class="timeline-heading text-center animate-box">
+                        <li class="timeline-heading text-center">
                             <div><h3>Work Experience</h3></div>
                         </li>
-                        <li class="animate-box timeline-unverted">
+                        <li class="timeline-unverted">
                             <div class="timeline-badge"><i class="icon-suitcase"></i></div>
                             <div class="timeline-panel">
                                 <div class="timeline-heading">
@@ -209,7 +210,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="timeline-inverted animate-box">
+                        <li class="timeline-inverted">
                             <div class="timeline-badge"><i class="icon-suitcase"></i></div>
                             <div class="timeline-panel">
                                 <div class="timeline-heading">
@@ -224,7 +225,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="animate-box timeline-unverted">
+                        <li class="timeline-unverted">
                             <div class="timeline-badge"><i class="icon-suitcase"></i></div>
                             <div class="timeline-panel">
                                 <div class="timeline-heading">
@@ -238,7 +239,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="timeline-inverted animate-box">
+                        <li class="timeline-inverted">
                             <div class="timeline-badge"><i class="icon-suitcase"></i></div>
                             <div class="timeline-panel">
                                 <div class="timeline-heading">
@@ -252,10 +253,10 @@
                             </div>
                         </li>
 
-                        <li class="timeline-heading text-center animate-box" style="margin-top: 1.5rem;">
+                        <li class="timeline-heading text-center" style="margin-top: 1.5rem;">
                             <div><h3>Education</h3></div>
                         </li>
-                        <li class="animate-box timeline-unverted">
+                        <li class="timeline-unverted">
                             <div class="timeline-badge"><i class="icon-graduation-cap"></i></div>
                             <div class="timeline-panel">
                                 <div class="timeline-heading">
@@ -271,7 +272,7 @@
         </div>
     </section>
 
-    <section id="fh5co-skills" class="animate-box" aria-label="Technical Skills">
+    <section id="fh5co-skills" aria-label="Technical Skills">
         <div class="max-w-5xl mx-auto px-6 py-16">
             <div class="text-center mb-12">
                 <span class="section-label">What I Know</span>
@@ -398,7 +399,7 @@
         </div>
     </section>
 
-    <section id="fh5co-projects" class="animate-box" aria-label="Projects">
+    <section id="fh5co-projects" aria-label="Projects">
         <div class="max-w-5xl mx-auto px-6 py-16">
             <div class="text-center mb-12">
                 <span class="section-label">What I've Built</span>
@@ -449,7 +450,7 @@
         </div>
     </section>
 
-    <section id="fh5co-contact" class="animate-box" aria-label="Contact">
+    <section id="fh5co-contact" aria-label="Contact">
         <div class="max-w-5xl mx-auto px-6 py-16">
             <div class="text-center mb-12">
                 <span class="section-label">Get In Touch</span>
@@ -483,55 +484,9 @@
     </footer>
 
 <div class="gototop js-top">
-    <a href="#" class="js-gotop"><i class="icon-arrow-up22"></i></a>
+    <a href="#page" class="js-gotop" aria-label="Back to top"><i class="icon-arrow-up22"></i></a>
 </div>
 
-<!-- jQuery -->
-<script src="js/jquery.min.js"></script>
-<!-- jQuery Easing -->
-<script src="js/jquery.easing.1.3.js"></script>
-<!-- Waypoints -->
-<script src="js/jquery.waypoints.min.js"></script>
-<!-- Easy PieChart -->
-<script src="js/jquery.easypiechart.min.js"></script>
-
-<!-- Main -->
-<script src="js/main.js"></script>
-
-<!-- Skill bars scroll animation -->
-<script>
-(function() {
-  var animated = false;
-  function animateBars() {
-    if (animated) return;
-    var section = document.getElementById('fh5co-skills');
-    if (!section) return;
-    var rect = section.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.85) {
-      animated = true;
-      var bars = section.querySelectorAll('.skill-bar-fill');
-      bars.forEach(function(bar, i) {
-        var level = bar.getAttribute('data-level');
-        var widths = { expert: '95%', advanced: '75%', intermediate: '55%', beginner: '30%' };
-        bar.style.width = '0%';
-        setTimeout(function() {
-          bar.style.width = widths[level] || '50%';
-        }, 80 * i);
-      });
-    }
-  }
-  window.addEventListener('scroll', animateBars);
-  animateBars();
-})();
-</script>
-
-  <!-- Nav scroll shadow -->
-  <script>
-    window.addEventListener('scroll', function() {
-      var nav = document.getElementById('main-nav');
-      if (nav) nav.classList.toggle('scrolled', window.scrollY > 20);
-    });
-  </script>
 
 </body>
 </html>
