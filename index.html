@@ -13,7 +13,7 @@
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
 
     <link href="images/favicon.svg" rel="icon">
-    <link href="images/apple-touch-icon.svg" rel="apple-touch-icon">
+    <link href="images/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180">
 
     <!-- Facebook and Twitter integration -->
     <meta property="og:title" content="Tapan Derasari - PHP Team Lead"/>
@@ -27,7 +27,7 @@
     <meta name="twitter:title" content="Tapan Derasari - PHP Team Lead"/>
     <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/41634687"/>
     <meta name="twitter:url" content="https://tapanderasari.github.io/"/>
-    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:card" content="summary"/>
     <meta name="twitter:description" content="PHP Team Lead with 7+ years in Laravel, Vue.js &amp; Node.js. Open to opportunities from Ahmedabad, India."/>
 
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -95,6 +95,18 @@
 
 </head>
 <body class="min-h-screen transition-colors duration-400">
+  <!-- Apply saved theme before first paint to avoid a light-mode flash -->
+  <script>
+    (function () {
+      var stored = null;
+      try { stored = localStorage.getItem('dark-mode'); } catch (e) {}
+      var dark = stored !== null ? stored === 'true' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (dark) {
+        document.documentElement.classList.add('dark');
+        document.body.classList.add('dark-mode');
+      }
+    })();
+  </script>
   <div id="page">
     <!-- Sticky Navigation -->
     <nav id="main-nav" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300"
@@ -274,8 +286,7 @@
                             </div>
                         </li>
 
-                        <br>
-                        <li class="timeline-heading text-center animate-box">
+                        <li class="timeline-heading text-center animate-box" style="margin-top: 1.5rem;">
                             <div><h3>Education</h3></div>
                         </li>
                         <li class="animate-box timeline-unverted">
@@ -420,7 +431,6 @@
             </div>
         </div>
     </section>
-</div>
 
     <section id="fh5co-projects" class="animate-box" aria-label="Projects">
         <div class="max-w-5xl mx-auto px-6 py-16">
@@ -498,6 +508,7 @@
     </section>
 
     </main>
+  </div>
 
     <!-- Footer -->
     <footer id="fh5co-footer" style="text-align: center; padding: 2.5rem 1rem; border-top: 1px solid rgba(0,0,0,0.08);">
@@ -517,9 +528,6 @@
 <script src="js/jquery.waypoints.min.js"></script>
 <!-- Easy PieChart -->
 <script src="js/jquery.easypiechart.min.js"></script>
-<!-- Google Map -->
-<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCefOgb1ZWqYtj7raVSmN4PL2WkTrc-KyA&sensor=false"></script>-->
-<!--<script src="js/google_map.js"></script>-->
 
 <!-- Main -->
 <script src="js/main.js"></script>
@@ -565,14 +573,13 @@
       if (toggle) toggle.innerHTML = '🌙 Dark';
     }
   }
-  const stored = localStorage.getItem('dark-mode');
-  const darkPref = stored !== null ? stored === 'true' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-  setDarkMode(darkPref);
+  // Theme was already applied at the top of <body>; sync the toggle label to it
+  setDarkMode(document.documentElement.classList.contains('dark'));
   if (toggle) {
     toggle.addEventListener('click', () => {
       const isDark = !document.documentElement.classList.contains('dark');
       setDarkMode(isDark);
-      localStorage.setItem('dark-mode', isDark);
+      try { localStorage.setItem('dark-mode', isDark); } catch (e) {}
     });
   }
 </script>
