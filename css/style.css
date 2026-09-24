@@ -1,11 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap');
-@font-face {
-  font-family: 'icomoon';
-  src: url("../fonts/icomoon/icomoon/fonts/icomoon.eot?srf3rx");
-  src: url("../fonts/icomoon/icomoon/fonts/icomoon.eot?srf3rx#iefix") format("embedded-opentype"), url("../fonts/icomoon/icomoon/fonts/icomoon.ttf?srf3rx") format("truetype"), url("../fonts/icomoon/icomoon/fonts/icomoon.woff?srf3rx") format("woff"), url("../fonts/icomoon/icomoon/fonts/icomoon.svg?srf3rx#icomoon") format("svg");
-  font-weight: normal;
-  font-style: normal;
-}
 /* =======================================================
 *
 * 	Template Style 
@@ -23,6 +16,16 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: -0.125em;
+}
+.icon--wide {
+  width: 1.3125em; /* the cloud glyph is 1344/1024 units wide */
 }
 
 body {
@@ -303,7 +306,9 @@ h1, h2, h3, h4, h5, h6, figure {
   margin-left: -21px;
   background-color: var(--accent);
   z-index: 100;
-  display: table;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
@@ -319,11 +324,9 @@ h1, h2, h3, h4, h5, h6, figure {
     margin-left: -10px !important;
   }
 }
-.timeline > li > .timeline-badge i {
-  display: table-cell;
-  vertical-align: middle;
-  height: 44px;
+.timeline > li > .timeline-badge .icon {
   font-size: 18px;
+  vertical-align: 0;
 }
 .timeline > li.timeline-unverted {
   text-align: right;
@@ -426,7 +429,7 @@ h1, h2, h3, h4, h5, h6, figure {
   padding-left: 40px;
   color: var(--text-primary);
 }
-.contact-info li i {
+.contact-info li .icon {
   position: absolute;
   top: .3em;
   left: 0;
@@ -455,7 +458,9 @@ h1, h2, h3, h4, h5, h6, figure {
 .gototop a {
   width: 50px;
   height: 50px;
-  display: table;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--accent);
   color: #fff;
   text-align: center;
@@ -464,10 +469,8 @@ h1, h2, h3, h4, h5, h6, figure {
   -ms-border-radius: 50%;
   border-radius: 50%;
 }
-.gototop a i {
-  height: 50px;
-  display: table-cell;
-  vertical-align: middle;
+.gototop a .icon {
+  vertical-align: 0;
 }
 .gototop a:hover, .gototop a:active, .gototop a:focus {
   text-decoration: none;

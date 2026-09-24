@@ -88,3 +88,30 @@ test('unused vendor scripts are deleted', () => {
 test('go-to-top is a real link with an accessible name', () => {
   assert.match(read('index.html'), /<a href="#page" class="js-gotop" aria-label="Back to top">/);
 });
+
+const ICONS = ['arrow-up22', 'cloud', 'database', 'envelop', 'github2', 'graduation-cap',
+  'linkedin2', 'location3', 'monitor', 'phone3', 'suitcase', 'twitter2', 'wrench'];
+
+test('icons are inline SVG with a matching symbol for every use', () => {
+  const html = read('index.html');
+  assert.ok(!/<i class="icon-/.test(html), 'icon-font <i> elements remain');
+  const symbols = [...html.matchAll(/<symbol id="icon-([a-z0-9-]+)"/g)].map(m => m[1]).sort();
+  assert.deepEqual(symbols, [...ICONS].sort());
+  const uses = [...html.matchAll(/<use href="#icon-([a-z0-9-]+)"\/>/g)].map(m => m[1]);
+  assert.equal(uses.length, 22, `expected 22 icon uses, found ${uses.length}`);
+  for (const u of uses) assert.ok(ICONS.includes(u), `no symbol for icon-${u}`);
+});
+
+test('the icon font is gone', () => {
+  assert.ok(!read('index.html').includes('icomoon'), 'icomoon still referenced in HTML');
+  assert.ok(!read('css/style.css').includes('icomoon'), 'icomoon still referenced in CSS');
+  assert.ok(!exists('css/icomoon.css'));
+  assert.ok(!exists('fonts/icomoon'));
+  assert.ok(!exists('fonts/bootstrap'));
+});
+
+test('icon CSS targets .icon, not <i>', () => {
+  const css = read('css/style.css');
+  assert.match(css, /\.icon\s*\{[^}]*fill:\s*currentColor/);
+  assert.ok(!/(timeline-badge|contact-info li|gototop a) i\b/.test(css), 'selectors still target <i>');
+});
