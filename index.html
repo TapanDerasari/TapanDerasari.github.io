@@ -32,33 +32,12 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com?plugins=typography,forms"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['DM Sans', 'Arial', 'sans-serif'],
-              serif: ['Fraunces', 'Georgia', 'serif'],
-            },
-            colors: {
-              accent: {
-                DEFAULT: '#D4622A',
-                dark: '#E8854A',
-              },
-              glass: 'rgba(255,255,255,0.85)',
-              'glass-dark': 'rgba(30,32,38,0.88)',
-            },
-          },
-        },
-      }
-    </script>
     <!-- Icomoon Icon Fonts-->
     <link rel="stylesheet" href="css/icomoon.css">
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
+    <!-- Compiled Tailwind (npm run build); loads last, matching the old CDN cascade -->
+    <link rel="stylesheet" href="css/tailwind.css">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",

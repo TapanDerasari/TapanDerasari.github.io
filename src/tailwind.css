@@ -1,0 +1,34 @@
+/*
+ * Tailwind source for index.html.
+ * Setup: npm install   (also enables the pre-commit hook)
+ * Build: npm run build (writes css/tailwind.css; the hook runs this for you)
+ *
+ * Preflight and utilities are imported without cascade layers on purpose.
+ * The site was built against the old v3 CDN, which emitted plain CSS after
+ * style.css, so Tailwind won equal-specificity ties. Layered CSS always loses
+ * to unlayered style.css, which would change the design.
+ */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css";
+@import "tailwindcss/utilities.css" source(none);
+@source "../index.html";
+
+/*
+ * Tailwind v3 preflight rules that v4 dropped or weakened (v4 resets margins
+ * with `*`, which loses to element rules in style.css). The design was built
+ * against v3, so keep them.
+ */
+*, ::after, ::before, ::backdrop, ::file-selector-button { border-color: #e5e7eb; }
+body { line-height: inherit; }
+blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre { margin: 0; }
+button, input, optgroup, select, textarea { margin: 0; padding: 0; }
+fieldset { margin: 0; padding: 0; }
+legend { padding: 0; }
+ol, ul, menu { margin: 0; padding: 0; }
+dialog { padding: 0; }
+
+@theme {
+  --font-sans: "DM Sans", Arial, sans-serif;
+  --font-serif: "Fraunces", Georgia, serif;
+  --color-accent: #E8854A;
+}
