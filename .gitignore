@@ -1,3 +1,6 @@
 .qodo
 node_modules/
 .perf/
+
+# Original full-size photo; the site uses the optimised crops in images/
+images/Tapan-Derasari-Photo.jpg

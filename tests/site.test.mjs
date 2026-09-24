@@ -141,10 +141,6 @@ test('Google Fonts load once, from the <link>', () => {
   assert.equal(read('index.html').split('fonts.googleapis.com/css2').length - 1, 1);
 });
 
-test('hero avatar reserves space and loads with high priority', () => {
-  assert.match(read('index.html'),
-    /<img src="https:\/\/avatars\.githubusercontent\.com\/u\/41634687" alt="Tapan Derasari" class="hero-avatar-img" width="460" height="460" fetchpriority="high" decoding="async">/);
-});
 
 // Review fix: style.css must state the values that actually render, not rules the
 // Tailwind v3-compat block silently overrides.
@@ -155,4 +151,18 @@ test('style.css declares the line-height and element margins that actually apply
   assert.ok(!/margin/.test(rule('p')), 'p { margin } is overridden by the v3 reset; remove it');
   assert.ok(!/margin/.test(rule('h1, h2, h3, h4, h5, h6, figure')), 'heading margins are overridden; remove them');
   assert.ok(!read('src/tailwind.css').includes('body { line-height: inherit; }'), 'compat body line-height no longer needed');
+});
+
+test('the portfolio photo is self-hosted everywhere, not the GitHub avatar', () => {
+  const html = read('index.html');
+  assert.ok(!html.includes('avatars.githubusercontent.com'), 'GitHub avatar still referenced');
+  for (const f of ['images/tapan-derasari-avatar.webp', 'images/tapan-derasari-avatar.jpg', 'images/tapan-derasari-og.jpg']) {
+    assert.ok(exists(f), `${f} missing`);
+  }
+  const og = 'https://tapanderasari.github.io/images/tapan-derasari-og.jpg';
+  assert.match(html, new RegExp(`<meta property="og:image" content="${og}"/>`));
+  assert.match(html, new RegExp(`<meta name="twitter:image" content="${og}"/>`));
+  assert.match(html, new RegExp(`"image": "${og}"`));
+  assert.match(html, /<picture>\s*<source srcset="images\/tapan-derasari-avatar\.webp" type="image\/webp">\s*<img src="images\/tapan-derasari-avatar\.jpg" alt="Tapan Derasari" class="hero-avatar-img" width="440" height="440" fetchpriority="high" decoding="async">\s*<\/picture>/);
+  assert.ok(read('.gitignore').includes('images/Tapan-Derasari-Photo.jpg'), 'keep the 1.8 MB original out of the repo');
 });
