@@ -145,3 +145,14 @@ test('hero avatar reserves space and loads with high priority', () => {
   assert.match(read('index.html'),
     /<img src="https:\/\/avatars\.githubusercontent\.com\/u\/41634687" alt="Tapan Derasari" class="hero-avatar-img" width="460" height="460" fetchpriority="high" decoding="async">/);
 });
+
+// Review fix: style.css must state the values that actually render, not rules the
+// Tailwind v3-compat block silently overrides.
+test('style.css declares the line-height and element margins that actually apply', () => {
+  const css = read('css/style.css');
+  const rule = (sel) => (css.match(new RegExp(`(?:^|\\n)${sel}\\s*\\{([^}]*)\\}`)) || [])[1] || '';
+  assert.match(rule('body'), /line-height:\s*1\.5;/, 'body line-height should be 1.5 (what renders)');
+  assert.ok(!/margin/.test(rule('p')), 'p { margin } is overridden by the v3 reset; remove it');
+  assert.ok(!/margin/.test(rule('h1, h2, h3, h4, h5, h6, figure')), 'heading margins are overridden; remove them');
+  assert.ok(!read('src/tailwind.css').includes('body { line-height: inherit; }'), 'compat body line-height no longer needed');
+});
