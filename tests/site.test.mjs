@@ -29,3 +29,22 @@ test('compiled CSS covers the utilities index.html uses, without plugins', () =>
   assert.ok(css.includes('.sm\\:inline'), 'missing .sm:inline');
   assert.ok(!css.includes('.prose'), 'typography plugin output found');
 });
+
+test('site is dark-only: no toggle, no theme scripts', () => {
+  const html = read('index.html');
+  assert.ok(!html.includes('darkModeToggle'), 'toggle button still present');
+  assert.ok(!html.includes('localStorage'), 'theme persistence script still present');
+  assert.ok(!html.includes('dark-mode'), 'dark-mode class still referenced');
+  assert.match(html, /<meta name="color-scheme" content="dark">/);
+  assert.match(html, /<meta name="theme-color" content="#18191E">/);
+  assert.ok(!html.includes('rgba(0,0,0,0.08)'), 'dark-on-dark border still present');
+});
+
+test('style.css has dark values as the only theme', () => {
+  const css = read('css/style.css');
+  assert.ok(!css.includes('dark-mode'), 'body.dark-mode rules still present');
+  assert.match(css, /--accent:\s*#E8854A;/);
+  assert.match(css, /--text-primary:\s*#F3F4F6;/);
+  assert.ok(css.includes('linear-gradient(135deg, #18191E 0%, #22242C 100%)'));
+  assert.ok(!/^\*\s*\{\s*transition/m.test(css), 'global * transition still present');
+});
