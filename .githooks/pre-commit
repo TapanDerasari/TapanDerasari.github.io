@@ -1,26 +1,38 @@
 #!/bin/sh
 # Rebuild the compiled Tailwind CSS whenever its inputs are part of a commit,
 # so css/tailwind.css on GitHub Pages never falls out of date.
+#
+# The build reads the *staged* index.html and src/tailwind.css, so the committed
+# CSS always matches the committed HTML, even when other edits are unstaged.
 
 watched_staged=$(git diff --cached --name-only --diff-filter=ACMR -- \
   index.html src/tailwind.css package.json package-lock.json)
 
 [ -z "$watched_staged" ] && exit 0
 
-if [ ! -x node_modules/.bin/tailwindcss ]; then
+tailwind=node_modules/.bin/tailwindcss
+if [ ! -x "$tailwind" ]; then
   echo "pre-commit: Tailwind CLI not installed. Run 'npm install' first; commit blocked." >&2
   exit 1
 fi
 
-for f in index.html src/tailwind.css; do
-  if ! git diff --quiet -- "$f"; then
-    echo "pre-commit: warning: $f has unstaged changes; the CSS build includes them." >&2
-  fi
-done
+# Snapshot the staged inputs inside .git, so `@import "tailwindcss/..."` still
+# resolves through the repository's node_modules.
+snapshot="$(git rev-parse --git-dir)/tailwind-build"
+rm -rf "$snapshot"
+mkdir -p "$snapshot/src" &&
+  git show :index.html > "$snapshot/index.html" &&
+  git show :src/tailwind.css > "$snapshot/src/tailwind.css" || {
+  rm -rf "$snapshot"
+  echo "pre-commit: could not read staged index.html / src/tailwind.css; commit blocked." >&2
+  exit 1
+}
 
-if ! npm run --silent build >&2; then
+if ! "$tailwind" -i "$snapshot/src/tailwind.css" -o css/tailwind.css --minify >&2; then
+  rm -rf "$snapshot"
   echo "pre-commit: Tailwind build failed; commit blocked." >&2
   exit 1
 fi
 
+rm -rf "$snapshot"
 git add css/tailwind.css

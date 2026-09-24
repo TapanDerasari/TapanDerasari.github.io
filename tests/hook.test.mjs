@@ -79,7 +79,7 @@ test('skips the build when no watched file is staged', () => {
   } finally { cleanup(); }
 });
 
-test('warns, but still commits, when index.html also has unstaged edits', () => {
+test('builds from the staged index.html, ignoring unstaged edits', () => {
   const { dir, git, cleanup } = makeRepo();
   try {
     addClassToIndex(dir, 'tracking-widest');
@@ -87,6 +87,23 @@ test('warns, but still commits, when index.html also has unstaged edits', () => 
     addClassToIndex(dir, 'tracking-tighter'); // unstaged
     const result = git('commit', '-m', 'partial stage');
     assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stderr, /unstaged changes/);
+    const committedCss = git('show', 'HEAD:css/tailwind.css').stdout;
+    assert.ok(committedCss.includes('.tracking-widest'), 'staged utility missing from committed CSS');
+    assert.ok(!committedCss.includes('.tracking-tighter'), 'unstaged utility leaked into committed CSS');
+  } finally { cleanup(); }
+});
+
+test('keeps CSS for a staged class that was later removed from the working tree', () => {
+  const { dir, git, cleanup } = makeRepo();
+  try {
+    const original = readFileSync(join(dir, 'index.html'), 'utf8');
+    addClassToIndex(dir, 'tracking-normal');
+    git('add', 'index.html');
+    writeFileSync(join(dir, 'index.html'), original); // unstaged removal
+    const result = git('commit', '-m', 'stage then revert working copy');
+    assert.equal(result.status, 0, result.stderr);
+    assert.ok(git('show', 'HEAD:index.html').stdout.includes('tracking-normal'));
+    assert.ok(git('show', 'HEAD:css/tailwind.css').stdout.includes('.tracking-normal'),
+      'committed HTML uses .tracking-normal but committed CSS lacks it');
   } finally { cleanup(); }
 });
