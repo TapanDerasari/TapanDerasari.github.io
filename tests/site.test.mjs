@@ -115,3 +115,33 @@ test('icon CSS targets .icon, not <i>', () => {
   assert.match(css, /\.icon\s*\{[^}]*fill:\s*currentColor/);
   assert.ok(!/(timeline-badge|contact-info li|gototop a) i\b/.test(css), 'selectors still target <i>');
 });
+
+test('head loads resources in the specified order', () => {
+  const head = read('index.html').split('</head>')[0];
+  const order = [
+    'name="color-scheme"',
+    'rel="icon"',
+    'property="og:title"',
+    'rel="preconnect" href="https://fonts.googleapis.com"',
+    'rel="preconnect" href="https://fonts.gstatic.com" crossorigin',
+    'href="https://fonts.googleapis.com/css2?',
+    'href="css/style.css"',
+    'href="css/tailwind.css"',
+    'application/ld+json',
+    'src="js/main.js" defer',
+  ].map(s => [s, head.indexOf(s)]);
+  for (const [s, i] of order) assert.ok(i !== -1, `missing in <head>: ${s}`);
+  for (let k = 1; k < order.length; k++) {
+    assert.ok(order[k - 1][1] < order[k][1], `${order[k - 1][0]} must come before ${order[k][0]}`);
+  }
+});
+
+test('Google Fonts load once, from the <link>', () => {
+  assert.ok(!read('css/style.css').includes('@import'), 'style.css still @imports fonts');
+  assert.equal(read('index.html').split('fonts.googleapis.com/css2').length - 1, 1);
+});
+
+test('hero avatar reserves space and loads with high priority', () => {
+  assert.match(read('index.html'),
+    /<img src="https:\/\/avatars\.githubusercontent\.com\/u\/41634687" alt="Tapan Derasari" class="hero-avatar-img" width="460" height="460" fetchpriority="high" decoding="async">/);
+});
