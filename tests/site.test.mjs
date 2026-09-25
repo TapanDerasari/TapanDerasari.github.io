@@ -247,3 +247,16 @@ test('every local file index.html references exists', () => {
   assert.ok(refs.length >= 8, 'expected local asset references');
   for (const r of refs) assert.ok(exists(r), `missing: ${r}`);
 });
+
+test('projects section lists the four projects as self-contained cards', () => {
+  const html = read('index.html');
+  const titles = [...html.matchAll(/<div class="project-title">([^<]+)<\/div>/g)].map(m => m[1]);
+  assert.deepEqual(titles, ['Real-Time Power Outage Tracking Platform', 'Procurement Intelligence SaaS', 'REST API Gateway', 'Serverless Event Processor']);
+  for (const file of ['index.html', 'llms.txt', 'llms-full.txt']) {
+    const text = read(file);
+    assert.ok(!text.includes('50+ clients'), `${file} still has the old SaaS claim`);
+  }
+  const projects = html.split('id="fh5co-projects"')[1].split('</section>')[0];
+  assert.ok(!/<a\s/.test(projects), 'project cards should not link out');
+  assert.match(read('css/style.css'), /\.projects-bento \.project-card:last-child:nth-child\(even\)\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/);
+});

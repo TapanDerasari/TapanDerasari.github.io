@@ -42,8 +42,11 @@ Bachelor's Degree (Gold Medalist) — College of Agricultural Information Techno
 
 ## Projects — Full Detail
 
-### Multi-Tenant SaaS Platform
-Built a white-label SaaS platform serving 50+ clients. Architected a multi-database strategy where each tenant gets an isolated database. Implemented automated provisioning pipeline for new tenant onboarding, custom domain routing, and role-based access control (RBAC) with granular permissions. Tech: Laravel 10, MySQL, Vue.js 3, Laravel Tenancy package.
+### Real-Time Power Outage Tracking Platform
+Public-facing platform that tracks power outages across the US in real time. Features live outage maps at state, county and utility level, alerts, historical data, and a data API used by emergency management, media and business users. As team lead, led the team building it on Nest.js (backend) and Next.js (frontend), split into microservices so the public site stays responsive under heavy traffic during storms. Tech: Nest.js, Next.js, microservices, REST API.
+
+### Procurement Intelligence SaaS
+SaaS platform that helps CFOs and procurement teams control supplier spend. Features include spend tracking, contract management with automated renewals, supplier risk and ESG compliance checks, analytics dashboards, and AI-powered savings and risk insights. Team lead on the project. Tech: Laravel (backend), Nuxt.js (frontend).
 
 ### REST API Gateway
 Designed and implemented a centralized API gateway as the single entry point for all mobile app clients. Features include: JWT authentication via Laravel Sanctum, per-client rate limiting backed by Redis, request/response logging, and auto-generated Swagger/OpenAPI documentation. Deployed on AWS EC2 with RDS MySQL.

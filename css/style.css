@@ -606,9 +606,14 @@ h1, h2, h3, h4, h5, h6, figure {
 .projects-bento .project-card:first-child {
   grid-column: 1 / -1;
 }
+/* With an even card count the last card would sit alone in its row; stretch it. */
+.projects-bento .project-card:last-child:nth-child(even) {
+  grid-column: 1 / -1;
+}
 @media screen and (max-width: 768px) {
   .projects-bento { grid-template-columns: 1fr; }
   .projects-bento .project-card:first-child { grid-column: auto; }
+  .projects-bento .project-card:last-child:nth-child(even) { grid-column: auto; }
 }
 .project-card {
   position: relative;
