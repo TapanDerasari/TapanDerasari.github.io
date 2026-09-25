@@ -10,7 +10,7 @@ Tapan Derasari is a PHP Team Lead at TOPS Infosolutions Pvt. Ltd., one of India'
 
 **Expert (5+ years daily use):** PHP, Laravel, HTML5, CSS3, Git
 **Advanced (3–5 years, production use):** MySQL, REST API Design, jQuery, Composer, Postman
-**Intermediate (1–3 years, project use):** Node.js, PostgreSQL, Vue.js, Nuxt.js, Tailwind CSS, AWS Lambda, AWS Amplify, Docker, Redis, NPM
+**Intermediate (1–3 years, project use):** Node.js, PostgreSQL, Vue.js, Nuxt.js, Tailwind CSS, AWS Lambda, AWS Amplify, Docker, Redis, NPM, Claude Code (AI-assisted development), Amazon Bedrock with Guardrails, Amazon Transcribe, Amazon Polly
 **Beginner (learning/exposure):** CI/CD pipelines
 
 ## Work Experience

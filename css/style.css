@@ -499,6 +499,17 @@ h1, h2, h3, h4, h5, h6, figure {
 @media screen and (max-width: 768px) {
   .skills-grid { grid-template-columns: 1fr; }
 }
+.skill-card--wide { grid-column: 1 / -1; }
+.skill-items-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2.5rem;
+}
+.skill-items-cols .skill-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+@media screen and (max-width: 768px) {
+  .skill-items-cols { grid-template-columns: 1fr; }
+  .skill-items-cols .skill-item:nth-last-child(2):nth-child(odd) { border-bottom: 1px solid rgba(255,255,255,0.05); }
+}
 .skill-card {
   position: relative;
   padding: 1.75rem 1.75rem 1.75rem 2.25rem;
