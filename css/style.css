@@ -960,6 +960,36 @@ h1, h2, h3, h4, h5, h6, figure {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+/* --- Hero orbit system (js/hero-orbits.js) --- */
+.orbit-system {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: 50% 50%;
+}
+/* The script adds .orbits-on and positions each pill; without it the static badge positions above apply. */
+.orbits-on .orbit-system {
+  will-change: transform, opacity;
+}
+.orbits-on .hero-badge {
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  animation: none;
+  will-change: transform, opacity;
+}
+.orbit-particles {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 @keyframes heroRingSpin {
   to { transform: rotate(360deg); }
 }
