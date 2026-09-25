@@ -78,6 +78,29 @@ test('skill bar widths live in CSS so they show without JavaScript', () => {
   assert.ok(!/class="skill-bar-fill"[^>]*style=/.test(read('index.html')), 'inline width on a bar');
 });
 
+const AI_SKILLS = ['Claude Code', 'Amazon Bedrock + Guardrails', 'Amazon Transcribe', 'Amazon Polly'];
+
+test('AI & Voice card lists the AI skills at intermediate, spanning the grid', () => {
+  const html = read('index.html');
+  const card = html.match(/<div class="skill-card skill-card--wide">[\s\S]*?AI &amp; Voice[\s\S]*?<!-- \/AI & Voice -->/);
+  assert.ok(card, 'wide AI & Voice card missing');
+  for (const name of AI_SKILLS) {
+    const escaped = name.replace(/[+&]/g, (c) => (c === '&' ? '&amp;' : '\\+'));
+    assert.match(card[0], new RegExp(`<span class="skill-item-name">${escaped}</span>\\s*<div class="skill-bar-wrap"><div class="skill-bar-fill" data-level="intermediate">`));
+  }
+  assert.match(read('css/style.css'), /\.skill-card--wide\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/);
+});
+
+test('AI skills are listed for search engines and LLMs', () => {
+  const html = read('index.html');
+  const knowsAbout = html.match(/"knowsAbout":\s*\[([\s\S]*?)\]/)[1];
+  for (const name of ['Claude Code', 'Amazon Bedrock', 'Amazon Transcribe', 'Amazon Polly']) {
+    assert.ok(knowsAbout.includes(`"${name}"`), `${name} missing from knowsAbout`);
+    assert.ok(read('llms.txt').includes(name), `${name} missing from llms.txt`);
+    assert.ok(read('llms-full.txt').includes(name), `${name} missing from llms-full.txt`);
+  }
+});
+
 test('unused vendor scripts are deleted', () => {
   for (const f of ['jquery.min.js', 'jquery.easing.1.3.js', 'jquery.waypoints.min.js',
     'jquery.easypiechart.min.js', 'jquery.stellar.min.js', 'modernizr-2.6.2.min.js',
@@ -91,7 +114,7 @@ test('go-to-top is a real link with an accessible name', () => {
 });
 
 const ICONS = ['arrow-up22', 'cloud', 'database', 'envelop', 'github2', 'graduation-cap',
-  'linkedin2', 'location3', 'monitor', 'phone3', 'suitcase', 'twitter2', 'wrench'];
+  'linkedin2', 'location3', 'monitor', 'phone3', 'sparkle', 'suitcase', 'twitter2', 'wrench'];
 
 test('icons are inline SVG with a matching symbol for every use', () => {
   const html = read('index.html');
@@ -99,7 +122,7 @@ test('icons are inline SVG with a matching symbol for every use', () => {
   const symbols = [...html.matchAll(/<symbol id="icon-([a-z0-9-]+)"/g)].map(m => m[1]).sort();
   assert.deepEqual(symbols, [...ICONS].sort());
   const uses = [...html.matchAll(/<use href="#icon-([a-z0-9-]+)"\/>/g)].map(m => m[1]);
-  assert.equal(uses.length, 22, `expected 22 icon uses, found ${uses.length}`);
+  assert.equal(uses.length, 23, `expected 23 icon uses, found ${uses.length}`);
   for (const u of uses) assert.ok(ICONS.includes(u), `no symbol for icon-${u}`);
 });
 
@@ -173,7 +196,20 @@ test('hero composition sits in an orbit-system wrapper', () => {
   const visual = html.split('<div class="hero-visual">')[1].split('<!-- Scroll indicator -->')[0];
   assert.match(visual, /^\s*<div class="orbit-system">/, 'orbit-system must wrap the hero-visual contents');
   assert.ok(visual.indexOf('hero-avatar-wrap') > visual.indexOf('orbit-system'));
-  assert.equal((visual.match(/class="hero-badge /g) || []).length, 6, 'six skill pills inside the orbit system');
+  assert.equal((visual.match(/class="hero-badge /g) || []).length, 8, 'eight skill pills inside the orbit system');
+});
+
+test('each hero pill has its own static position for the no-JS layout', () => {
+  const html = read('index.html');
+  const css = read('css/style.css');
+  const mods = [...html.matchAll(/class="hero-badge hero-badge--(\d+)"/g)].map(m => m[1]);
+  assert.equal(new Set(mods).size, mods.length, `pills share a position class: ${mods.join(', ')}`);
+  for (const n of mods) assert.match(css, new RegExp(`\\.hero-badge--${n}\\s*\\{[^}]*(top|bottom):`), `no position for .hero-badge--${n}`);
+});
+
+test('pills sharing an orbit are spread evenly, however many there are', () => {
+  const js = read('js/hero-orbits.js');
+  assert.ok(!/i < 3 \? 0 : Math\.PI/.test(js), 'phase assumes exactly two pills per orbit');
 });
 
 test('orbit layout only applies once the script opts in, so pills stay placed without JS', () => {
@@ -210,4 +246,17 @@ test('every local file index.html references exists', () => {
   const refs = [...html.matchAll(/(?:href|src|srcset)="(?!https?:|#|mailto:|tel:)([^"?#]+)/g)].map(m => m[1]);
   assert.ok(refs.length >= 8, 'expected local asset references');
   for (const r of refs) assert.ok(exists(r), `missing: ${r}`);
+});
+
+test('projects section lists the four projects as self-contained cards', () => {
+  const html = read('index.html');
+  const titles = [...html.matchAll(/<div class="project-title">([^<]+)<\/div>/g)].map(m => m[1]);
+  assert.deepEqual(titles, ['Real-Time Power Outage Tracking Platform', 'Procurement Intelligence SaaS', 'REST API Gateway', 'Serverless Event Processor']);
+  for (const file of ['index.html', 'llms.txt', 'llms-full.txt']) {
+    const text = read(file);
+    assert.ok(!text.includes('50+ clients'), `${file} still has the old SaaS claim`);
+  }
+  const projects = html.split('id="fh5co-projects"')[1].split('</section>')[0];
+  assert.ok(!/<a\s/.test(projects), 'project cards should not link out');
+  assert.match(read('css/style.css'), /\.projects-bento \.project-card:last-child:nth-child\(even\)\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/);
 });

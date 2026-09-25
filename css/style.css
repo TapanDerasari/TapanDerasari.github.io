@@ -499,6 +499,17 @@ h1, h2, h3, h4, h5, h6, figure {
 @media screen and (max-width: 768px) {
   .skills-grid { grid-template-columns: 1fr; }
 }
+.skill-card--wide { grid-column: 1 / -1; }
+.skill-items-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2.5rem;
+}
+.skill-items-cols .skill-item:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+@media screen and (max-width: 768px) {
+  .skill-items-cols { grid-template-columns: 1fr; }
+  .skill-items-cols .skill-item:nth-last-child(2):nth-child(odd) { border-bottom: 1px solid rgba(255,255,255,0.05); }
+}
 .skill-card {
   position: relative;
   padding: 1.75rem 1.75rem 1.75rem 2.25rem;
@@ -595,9 +606,14 @@ h1, h2, h3, h4, h5, h6, figure {
 .projects-bento .project-card:first-child {
   grid-column: 1 / -1;
 }
+/* With an even card count the last card would sit alone in its row; stretch it. */
+.projects-bento .project-card:last-child:nth-child(even) {
+  grid-column: 1 / -1;
+}
 @media screen and (max-width: 768px) {
   .projects-bento { grid-template-columns: 1fr; }
   .projects-bento .project-card:first-child { grid-column: auto; }
+  .projects-bento .project-card:last-child:nth-child(even) { grid-column: auto; }
 }
 .project-card {
   position: relative;
@@ -928,6 +944,14 @@ h1, h2, h3, h4, h5, h6, figure {
   top: 40%; left: -6%;
   animation-delay: 0.3s;
 }
+.hero-badge--7 {
+  top: 22%; right: -6%;
+  animation-delay: 1s;
+}
+.hero-badge--8 {
+  bottom: 26%; left: -2%;
+  animation-delay: 1.8s;
+}
 
 /* --- Scroll indicator --- */
 .hero-scroll {
@@ -1022,6 +1046,8 @@ h1, h2, h3, h4, h5, h6, figure {
   .hero-badge { font-size: 11px; padding: 5px 12px; }
   .hero-badge--6 { left: 2%; }
   .hero-badge--3 { right: 2%; }
+  .hero-badge--7 { right: 2%; }
+  .hero-badge--8 { left: 2%; }
 }
 
 /* Scroll margin for fixed nav */
