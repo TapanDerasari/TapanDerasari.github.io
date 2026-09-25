@@ -17,14 +17,19 @@
   var finePointer = matchMedia('(pointer: fine)').matches;
 
   // Each orbit is a horizontal circle tipped `open` degrees toward the viewer,
-  // then rotated `tilt` degrees on screen. Two pills share each orbit.
+  // then rotated `tilt` degrees on screen. Pills are dealt round-robin onto the
+  // orbits and spaced evenly around each one, so none ever share a position.
   var ORBITS = [
     { radius: 1.00, open: 26, tilt: -16, period: 46 },
     { radius: 1.20, open: 20, tilt: 12, period: 64 },
     { radius: 1.40, open: 30, tilt: 3, period: 82 }
   ];
-  var pills = [].slice.call(system.querySelectorAll('.hero-badge')).map(function (el, i) {
-    return { el: el, orbit: ORBITS[i % 3], phase: (i < 3 ? 0 : Math.PI) + (i % 3) * 1.3 };
+  var badges = system.querySelectorAll('.hero-badge');
+  var pills = [].slice.call(badges).map(function (el, i) {
+    var k = i % ORBITS.length;
+    var onOrbit = Math.ceil((badges.length - k) / ORBITS.length);
+    var slot = Math.floor(i / ORBITS.length);
+    return { el: el, orbit: ORBITS[k], phase: slot * 2 * Math.PI / onOrbit + k * 1.3 };
   });
 
   var canvas = document.createElement('canvas');

@@ -196,7 +196,20 @@ test('hero composition sits in an orbit-system wrapper', () => {
   const visual = html.split('<div class="hero-visual">')[1].split('<!-- Scroll indicator -->')[0];
   assert.match(visual, /^\s*<div class="orbit-system">/, 'orbit-system must wrap the hero-visual contents');
   assert.ok(visual.indexOf('hero-avatar-wrap') > visual.indexOf('orbit-system'));
-  assert.equal((visual.match(/class="hero-badge /g) || []).length, 6, 'six skill pills inside the orbit system');
+  assert.equal((visual.match(/class="hero-badge /g) || []).length, 8, 'eight skill pills inside the orbit system');
+});
+
+test('each hero pill has its own static position for the no-JS layout', () => {
+  const html = read('index.html');
+  const css = read('css/style.css');
+  const mods = [...html.matchAll(/class="hero-badge hero-badge--(\d+)"/g)].map(m => m[1]);
+  assert.equal(new Set(mods).size, mods.length, `pills share a position class: ${mods.join(', ')}`);
+  for (const n of mods) assert.match(css, new RegExp(`\\.hero-badge--${n}\\s*\\{[^}]*(top|bottom):`), `no position for .hero-badge--${n}`);
+});
+
+test('pills sharing an orbit are spread evenly, however many there are', () => {
+  const js = read('js/hero-orbits.js');
+  assert.ok(!/i < 3 \? 0 : Math\.PI/.test(js), 'phase assumes exactly two pills per orbit');
 });
 
 test('orbit layout only applies once the script opts in, so pills stay placed without JS', () => {
