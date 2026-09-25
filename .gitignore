@@ -4,3 +4,12 @@ node_modules/
 
 # Original full-size photo; the site uses the optimised crops in images/
 images/Tapan-Derasari-Photo.jpg
+
+# Editor, OS and local tooling files
+.DS_Store
+.idea/
+.vscode/
+.specstory/
+.claude/
+.playwright-mcp/
+.superpowers/

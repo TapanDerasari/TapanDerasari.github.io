@@ -52,8 +52,9 @@ test('style.css has dark values as the only theme', () => {
 test('no jQuery or plugins are loaded; main.js is deferred', () => {
   const html = read('index.html');
   const srcs = [...html.matchAll(/<script\b[^>]*\bsrc="([^"]+)"/g)].map(m => m[1]);
-  assert.deepEqual(srcs, ['js/main.js'], `unexpected scripts: ${srcs.join(', ')}`);
+  assert.deepEqual(srcs, ['js/main.js', 'js/hero-orbits.js'], `unexpected scripts: ${srcs.join(', ')}`);
   assert.match(html, /<script src="js\/main\.js" defer><\/script>/);
+  assert.match(html, /<script src="js\/hero-orbits\.js" defer><\/script>/);
   const inline = [...html.matchAll(/<script(?![^>]*(?:\bsrc=|type="application\/ld\+json"))[^>]*>/g)];
   assert.equal(inline.length, 0, 'inline scripts remain');
 });
@@ -165,4 +166,48 @@ test('the portfolio photo is self-hosted everywhere, not the GitHub avatar', () 
   assert.match(html, new RegExp(`"image": "${og}"`));
   assert.match(html, /<picture>\s*<source srcset="images\/tapan-derasari-avatar\.webp" type="image\/webp">\s*<img src="images\/tapan-derasari-avatar\.jpg" alt="Tapan Derasari" class="hero-avatar-img" width="440" height="440" fetchpriority="high" decoding="async">\s*<\/picture>/);
   assert.ok(read('.gitignore').includes('images/Tapan-Derasari-Photo.jpg'), 'keep the 1.8 MB original out of the repo');
+});
+
+test('hero composition sits in an orbit-system wrapper', () => {
+  const html = read('index.html');
+  const visual = html.split('<div class="hero-visual">')[1].split('<!-- Scroll indicator -->')[0];
+  assert.match(visual, /^\s*<div class="orbit-system">/, 'orbit-system must wrap the hero-visual contents');
+  assert.ok(visual.indexOf('hero-avatar-wrap') > visual.indexOf('orbit-system'));
+  assert.equal((visual.match(/class="hero-badge /g) || []).length, 6, 'six skill pills inside the orbit system');
+});
+
+test('orbit layout only applies once the script opts in, so pills stay placed without JS', () => {
+  const css = read('css/style.css');
+  assert.match(css, /\.orbit-system\s*\{[^}]*position:\s*absolute/);
+  assert.match(css, /\.orbits-on \.hero-badge\s*\{[^}]*animation:\s*none/);
+  assert.ok(!/(^|\n)\.hero-badge\s*\{[^}]*top:\s*50%/.test(css), 'unscoped pill centring would break the no-JS layout');
+});
+
+test('hero-orbits.js is dependency-free and respects motion, pointer and visibility', () => {
+  const js = read('js/hero-orbits.js');
+  assert.ok(!/\$\(|jQuery|import /.test(js), 'no libraries');
+  assert.ok(js.includes("matchMedia('(prefers-reduced-motion: reduce)')"), 'reduced motion');
+  assert.ok(js.includes("matchMedia('(pointer: fine)')"), 'parallax only with a mouse');
+  assert.ok(js.includes('IntersectionObserver') && js.includes('visibilitychange'), 'pauses when hidden');
+  assert.ok(js.includes("classList.add('orbits-on')"), 'opts in to the orbit CSS');
+  assert.ok(js.includes("setAttribute('aria-hidden', 'true')"), 'particle canvas hidden from assistive tech');
+});
+
+test('template leftovers are not published', () => {
+  for (const f of ['assets', 'forms', 'sass', 'inner-page.html', 'portfolio-details.html',
+    'css/bootstrap.css', 'css/bootstrap.css.map', 'css/animate.css', 'css/flexslider.css', 'css/style.css.map',
+    'images/blog-1.jpg', 'images/blog-2.jpg', 'images/cover_bg_1.jpg', 'images/cover_bg_3.jpg',
+    'images/loader.gif', 'images/loc.png', 'images/user-3.jpg', 'images/apple-touch-icon.svg',
+    ...[1, 2, 3, 4, 5, 6, 7, 8].map(n => `images/portfolio-${n}.jpg`),
+    'css/.DS_Store', 'fonts', 'images/.DS_Store', 'js/.DS_Store']) {
+    assert.ok(!exists(f), `${f} should be removed`);
+  }
+  assert.ok(!read('css/style.css').includes('sourceMappingURL'), 'stale source map comment');
+});
+
+test('every local file index.html references exists', () => {
+  const html = read('index.html');
+  const refs = [...html.matchAll(/(?:href|src|srcset)="(?!https?:|#|mailto:|tel:)([^"?#]+)/g)].map(m => m[1]);
+  assert.ok(refs.length >= 8, 'expected local asset references');
+  for (const r of refs) assert.ok(exists(r), `missing: ${r}`);
 });
