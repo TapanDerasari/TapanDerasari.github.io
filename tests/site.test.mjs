@@ -260,3 +260,12 @@ test('projects section lists the four projects as self-contained cards', () => {
   assert.ok(!/<a\s/.test(projects), 'project cards should not link out');
   assert.match(read('css/style.css'), /\.projects-bento \.project-card:last-child:nth-child\(even\)\s*\{[^}]*grid-column:\s*1\s*\/\s*-1/);
 });
+
+test('the site does not advertise availability for work', () => {
+  for (const file of ['index.html', 'llms.txt', 'llms-full.txt']) {
+    const text = read(file).toLowerCase();
+    for (const phrase of ['freelance', 'open to opportunities', 'open to freelance', 'full-time opportunities', 'discuss opportunities']) {
+      assert.ok(!text.includes(phrase), `${file} mentions "${phrase}"`);
+    }
+  }
+});
