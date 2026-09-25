@@ -192,3 +192,22 @@ test('hero-orbits.js is dependency-free and respects motion, pointer and visibil
   assert.ok(js.includes("classList.add('orbits-on')"), 'opts in to the orbit CSS');
   assert.ok(js.includes("setAttribute('aria-hidden', 'true')"), 'particle canvas hidden from assistive tech');
 });
+
+test('template leftovers are not published', () => {
+  for (const f of ['assets', 'forms', 'sass', 'inner-page.html', 'portfolio-details.html',
+    'css/bootstrap.css', 'css/bootstrap.css.map', 'css/animate.css', 'css/flexslider.css', 'css/style.css.map',
+    'images/blog-1.jpg', 'images/blog-2.jpg', 'images/cover_bg_1.jpg', 'images/cover_bg_3.jpg',
+    'images/loader.gif', 'images/loc.png', 'images/user-3.jpg', 'images/apple-touch-icon.svg',
+    ...[1, 2, 3, 4, 5, 6, 7, 8].map(n => `images/portfolio-${n}.jpg`),
+    'css/.DS_Store', 'fonts', 'images/.DS_Store', 'js/.DS_Store']) {
+    assert.ok(!exists(f), `${f} should be removed`);
+  }
+  assert.ok(!read('css/style.css').includes('sourceMappingURL'), 'stale source map comment');
+});
+
+test('every local file index.html references exists', () => {
+  const html = read('index.html');
+  const refs = [...html.matchAll(/(?:href|src|srcset)="(?!https?:|#|mailto:|tel:)([^"?#]+)/g)].map(m => m[1]);
+  assert.ok(refs.length >= 8, 'expected local asset references');
+  for (const r of refs) assert.ok(exists(r), `missing: ${r}`);
+});
